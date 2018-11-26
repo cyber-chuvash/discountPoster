@@ -1,0 +1,12 @@
+{
+  "vk_login": "",
+  "vk_password": "",
+  "app_id": "6666569",
+  "group_id": "174495553",
+  "mysql_host": "127.0.0.1",
+  "mysql_login": "root",
+  "mysql_password": "qwerty123",
+  "mysql_db": "shopdb",
+  "post_photo": true,
+  "job_interval_sec": 10
+}
