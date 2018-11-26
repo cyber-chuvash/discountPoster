@@ -19,7 +19,10 @@ class Database:
     def execute(self, sql_query: str, *args):
         cur = self.conn.cursor()
         cur.execute(sql_query, args)
-        result = cur.fetchall()
+        try:
+            result = cur.fetchall()
+        except mysql_connector.errors.InterfaceError:
+            result = None
         self.conn.commit()
         return result
 
@@ -74,13 +77,13 @@ def scheduled_job():
         try:
             shop_id, item_id = checker.get_item(price_id)
             url, photo_url = checker.get_urls(item_id)
-            price = checker.get_price(price_id)
-            item_name = checker.get_item_name(item_id)
-            shop_name = checker.get_shop_name(shop_id)
+            price = checker.get_price(price_id)[0]
+            item_name = checker.get_item_name(item_id)[0]
+            shop_name = checker.get_shop_name(shop_id)[0]
 
             text = f"""
             #{shop_name}\n
-            Cкидка {discount}%\n
+            Cкидка {discount}%
             {item_name} за {price}₽.\n
             {url}
             """
