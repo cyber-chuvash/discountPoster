@@ -27,8 +27,16 @@ class _EnvConfig:
         'mysql_password': 'MYSQL_PASS',
         'mysql_db': 'MYSQL_DB',
         # 'post_photo': 'POST_PHOTO',
-        'job_interval_sec': 'JOB_INTERVAL_SEC'
+        # 'job_interval_sec': 'JOB_INTERVAL_SEC'
     }
+
+    @property
+    def job_interval_sec(self):
+        return int(os.environ['JOB_INTERVAL_SEC'])
+
+    @property
+    def attach_link(self):
+        return bool(int(os.environ['ATTACH_LINK']))
 
     @property
     def post_photo(self):

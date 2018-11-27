@@ -87,10 +87,12 @@ def scheduled_job():
             {item_name} за {price}₽.\n
             {url}
             """
-            attach = f'{url}'
+            attach = []
+            if Config.attach_link:
+                attach.append(url)
             if Config.post_photo:
                 photo = poster.upload_photo(photo_url)
-                attach += f',{photo}'
+                attach.append(photo)
             poster.post(text, attachments=attach)
             checker.mark_as_posted(discount_id)
             logging.info(f'Successfuly processed discount with ID={discount_id}')

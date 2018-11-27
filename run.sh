@@ -14,7 +14,8 @@ docker run -d --name discount \
 -e MYSQL_LOGIN="" \
 -e MYSQL_PASS="" \
 -e MYSQL_DB="" \
--e POST_PHOTO="" \
--e JOB_INTERVAL_SEC="" \
--e LOG_LEVEL="" \
+-e POST_PHOTO="1" \
+-e ATTACH_LINK="1" \
+-e JOB_INTERVAL_SEC="10" \
+-e LOG_LEVEL="INFO" \
 cyberchuvash/discountposter:master
