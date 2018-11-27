@@ -21,9 +21,13 @@ class _EnvConfig:
         'mysql_login': 'MYSQL_LOGIN',
         'mysql_password': 'MYSQL_PASS',
         'mysql_db': 'MYSQL_DB',
-        'post_photo': 'POST_PHOTO',
+        # 'post_photo': 'POST_PHOTO',
         'job_interval_sec': 'JOB_INTERVAL_SEC'
     }
+
+    @property
+    def post_photo(self):
+        return bool(int(os.environ['POST_PHOTO']))
 
     def __getattr__(self, item):
         return os.environ[self.ENV_KEYS[item]]
