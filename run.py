@@ -7,7 +7,7 @@ from bot.config import Config
 
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(funcName)s - %(message)s',
-    level=logging.DEBUG
+    level=Config.log_level
 )
 
 while True:

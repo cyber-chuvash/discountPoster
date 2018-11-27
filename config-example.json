@@ -8,5 +8,6 @@
   "mysql_password": "qwerty123",
   "mysql_db": "shopdb",
   "post_photo": true,
-  "job_interval_sec": 10
+  "job_interval_sec": 10,
+  "log_level": "INFO"
 }
