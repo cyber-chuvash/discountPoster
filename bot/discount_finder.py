@@ -64,12 +64,10 @@ class DiscountChecker:
         self.db.execute("UPDATE `shopdb`.`historydiscount` SET `VK`='1' WHERE `Idlistdiscount`= %s", discount_id)
 
 
-def scheduled_job():
+def scheduled_job(poster: Poster):
     logging.info('Started scheduled_job')
     db = Database()
     logging.debug('Connected to the database')
-    poster = Poster()
-    logging.debug('Created VK API session')
     checker = DiscountChecker(db)
     discounts = checker.get_discounts()
     logging.info(f'Found {len(discounts)} discounts')

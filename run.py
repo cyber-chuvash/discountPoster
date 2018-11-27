@@ -3,6 +3,7 @@ import time
 
 from bot.discount_finder import scheduled_job
 from bot.config import Config
+from bot.poster import Poster
 
 
 logging.basicConfig(
@@ -10,9 +11,11 @@ logging.basicConfig(
     level=Config.log_level
 )
 
+poster = Poster()
+
 while True:
     try:
-        scheduled_job()
+        scheduled_job(poster)
     except Exception:
         logging.exception(
             """\n
