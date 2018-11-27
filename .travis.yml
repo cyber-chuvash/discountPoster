@@ -1,0 +1,23 @@
+sudo: required
+
+services:
+  - docker
+
+env:
+  global:
+    - REGISTRY_USER=cyberchuvash
+
+before_script:
+  - docker pull cyberchuvash/discountposter:$TRAVIS_BRANCH || true
+
+script:
+  - docker build --pull --cache-from cyberchuvash/discountposter:$TRAVIS_BRANCH --tag cyberchuvash/discountposter:$TRAVIS_BRANCH .
+
+before_deploy:
+  - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
+
+deploy:
+  provider: script
+  script: docker push cyberchuvash/discountposter:$TRAVIS_BRANCH
+  on:
+    branch: master
