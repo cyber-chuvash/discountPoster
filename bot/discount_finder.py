@@ -79,12 +79,10 @@ def scheduled_job(poster: Poster):
             item_name = checker.get_item_name(item_id)[0]
             shop_name = checker.get_shop_name(shop_id)[0]
 
-            text = f"""
-            #{shop_name}\n
-            Cкидка {discount}%
-            {item_name} за {price}₽.\n
-            {url}
-            """
+            text = (f"#{shop_name}\n\n"
+                    f"Cкидка {discount}%\n"
+                    f"{item_name} за {price}₽.\n\n"
+                    f"{url}\n")
             attach = []
             if Config.attach_link:
                 attach.append(url)
