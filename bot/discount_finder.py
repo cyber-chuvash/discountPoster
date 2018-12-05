@@ -52,6 +52,12 @@ class DiscountChecker:
         price = self.db.execute("SELECT Price FROM shopdb.price WHERE PriceID = %s", price_id)[0]
         return price
 
+    def get_prices(self, item_id):
+        prices = self.db.execute(
+            "SELECT Price FROM shopdb.price where ItemID = %s ORDER BY PriceID DESC limit 2", item_id
+        )
+        return prices[0][0], prices[1][0]
+
     def get_item_name(self, item_id):
         item_name = self.db.execute("SELECT ItemName FROM shopdb.item WHERE ItemID = %s", item_id)[0]
         return item_name
@@ -66,35 +72,51 @@ class DiscountChecker:
 
 def scheduled_job(poster: Poster):
     logging.info('Started scheduled_job')
+
     db = Database()
     logging.debug('Connected to the database')
     checker = DiscountChecker(db)
+
     discounts = checker.get_discounts()
     logging.info(f'Found {len(discounts)} discounts')
+
     for discount_id, price_id, discount in discounts:
         try:
             shop_id, item_id = checker.get_item(price_id)
             url, photo_url = checker.get_urls(item_id)
-            price = checker.get_price(price_id)[0]
             item_name = checker.get_item_name(item_id)[0]
             shop_name = checker.get_shop_name(shop_id)[0]
 
-            text = (f"#{shop_name}\n\n"
-                    f"Cкидка {discount}%\n"
-                    f"{item_name} за {price}₽.\n\n"
-                    f"{url}\n")
+            try:
+                new_price, old_price = checker.get_prices(item_id)
+                text = (f"#{shop_name}\n\n"
+                        f"Cкидка {discount}%\n"
+                        f"{item_name} за {new_price}₽.\n"
+                        f"Старая цена: {old_price}₽\n\n"
+                        f"{url}\n")
+
+            except IndexError:
+                price = checker.get_price(price_id)
+                text = (f"#{shop_name}\n\n"
+                        f"Cкидка {discount}%\n"
+                        f"{item_name} за {price}₽.\n\n"
+                        f"{url}\n")
+
             attach = []
             if Config.attach_link:
                 attach.append(url)
             if Config.post_photo:
                 photo = poster.upload_photo(photo_url)
                 attach.append(photo)
+
             poster.post(text, attachments=attach)
             checker.mark_as_posted(discount_id)
             logging.info(f'Successfuly processed discount with ID={discount_id}')
+
         except Exception:
             logging.warning(f'Discount with ID={discount_id} was not processed', exc_info=True)
             continue
+
     db.disconnect()
     logging.info('Ended scheduled job')
 
